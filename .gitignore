@@ -1,0 +1,9 @@
+.amplifier/cache/
+.amplifier/state/
+*.zip
+__pycache__/
+*.pyc
+.DS_Store
+SCRATCH.md
+.venv/
+node_modules/
