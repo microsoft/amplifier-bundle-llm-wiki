@@ -10,5 +10,3 @@ includes:
 ---
 
 # LLM Wiki Bundle
-
-@llm-wiki:context/wiki-instructions.md
