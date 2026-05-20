@@ -15,15 +15,6 @@ meta:
   model_role:
     - reasoning
     - general
-
-  tools:
-    - read_file
-    - glob
-    - grep
-    - write_file
-    - edit_file
-    - bash
-    - todo
 ---
 
 # wiki-policy-designer
