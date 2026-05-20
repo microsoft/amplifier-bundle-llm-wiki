@@ -6,12 +6,9 @@ bundle:
 
 includes:
   - bundle: git+https://github.com/microsoft/amplifier-bundle-modes@main
+  - bundle: llm-wiki:behaviors/llm-wiki
 ---
 
 # LLM Wiki Bundle
 
 @llm-wiki:context/wiki-instructions.md
-
----
-
-@foundation:context/shared/common-system-base.md

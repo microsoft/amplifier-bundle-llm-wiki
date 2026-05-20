@@ -1,0 +1,8 @@
+bundle:
+  name: llm-wiki-behavior
+  version: 0.1.0
+  description: Generic workflow modes for LLM-maintained wikis
+
+context:
+  include:
+    - llm-wiki:context/wiki-instructions.md
