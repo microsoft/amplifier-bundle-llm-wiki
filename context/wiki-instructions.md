@@ -50,7 +50,3 @@ Recommended transitions:
 - After `/wiki-ingest` → `/wiki-lint` (verify) → `/wiki-publish` (if clean)
 - `/wiki-query` answer worth keeping → `/wiki-ingest` to file it as a synthesis page
 - Any time → `/mode off` to exit
-
-## Status
-
-Bundle version: 0.1.0 — initial scaffold. Mode bodies pending.

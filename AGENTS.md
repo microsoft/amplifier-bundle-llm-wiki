@@ -46,12 +46,29 @@ The bundle is dogfooded in `~/dev/wiki/` (team-pulse content workflow). When ite
 2. In `~/dev/wiki/.amplifier/settings.yaml`, include this bundle by **local path** during development:
    ```yaml
    includes:
-     - bundle: /home/bkrabach/dev/amplifier-bundle-llm-wiki
+     - bundle: /path/to/amplifier-bundle-llm-wiki   # use your local clone path
    ```
 3. Activate a mode in `~/dev/wiki`, exercise the workflow, observe failures
 4. Fix here, re-test there
 
 When the bundle is published to GitHub, switch the include to a `git+https://` URL.
+
+## Validating changes
+
+After editing a mode, verify it parses by activating it in your dogfooding project:
+
+1. Run `/mode list` — your mode should appear (unless `advertised: false`)
+2. Activate with `/mode <name>` — if it activates without error, the YAML frontmatter is valid
+3. If activation fails, check the mode's `name:` field and YAML syntax
+
+Regenerate bundle docs after structural changes:
+
+```bash
+# from the bundle root, via recipes
+amplifier run --recipe @foundation:recipes/validate-bundle-repo
+```
+
+This regenerates `bundle.dot` / `bundle.png` and validates the bundle structure.
 
 ## What to read before editing
 

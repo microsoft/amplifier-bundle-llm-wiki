@@ -39,9 +39,9 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 
 Short version:
 
-- **Mechanism** (this bundle): mode bodies, contributed context, reference scripts at known paths
+- **Mechanism** (this bundle): mode bodies (rich operational guidance loaded only when a mode is active), reference scripts at known paths
 - **Policy** (your project): schema definition, publish target, viewer, optional mode overrides
-- **Discovery**: Amplifier loads bundle modes by default; project modes in `.amplifier/modes/` override silently by name
+- **Discovery**: Bundle modes are available once this bundle is included; project modes in `.amplifier/modes/` take precedence over bundle modes with the same `name:`
 
 ## Status
 
