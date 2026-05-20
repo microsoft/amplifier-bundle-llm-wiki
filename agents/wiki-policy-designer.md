@@ -25,6 +25,22 @@ You are a one-shot writer. You do **not** conduct conversations or negotiate sco
 
 ---
 
+## Read before you write — non-negotiable
+
+For **every file path** you would produce, you MUST first check whether the file already exists. Three cases:
+
+| If existing file | Then |
+|---|---|
+| Does not exist | Write fresh. Standard flow. |
+| Exists and is empty / placeholder (e.g. `.gitkeep`) | Replace with your version. |
+| Exists with substantive content | **Do NOT overwrite.** Read it. Compare against what you would write. Decide one of: <br>**(a)** Skip — existing content is sufficient. Report this in your final summary. <br>**(b)** Merge — preserve the user's content, add only what's structurally missing from the new framing. Narrate the merge intent before editing. <br>**(c)** Surface a conflict — if existing content contradicts the new scaffold's framing and you can't reconcile, STOP and report the conflict to the user with both versions. Do not silently impose your version. |
+
+This applies to `AGENTS.md`, `SCRATCH.md`, `.wiki/context/schema.md`, `.wiki/scripts/*`, and any other target path that may already carry the user's work. The user's prior content has authority. Your job is to scaffold what's missing, not to replace what's there.
+
+When in doubt: read first, narrate intent, ask before destroying.
+
+---
+
 ## Your Role
 
 ### Inputs you receive (via delegation instruction)
@@ -166,6 +182,8 @@ includes:
 ---
 
 ## Discipline
+
+- **Read existing files before writing.** Never blind-overwrite. See "Read before you write — non-negotiable" section above for the read/merge/skip decision matrix.
 
 ### Schema is a living document
 
