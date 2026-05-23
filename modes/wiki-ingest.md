@@ -76,15 +76,21 @@ One entry per cycle in the project's log file (typically `log.md` at the package
 - contradictions surfaced: <list, or "none">
 ```
 
-### Step 5 — Verify
+### Step 5 — Verify (mandatory gate)
 
-Run the project's verification script if present:
+Run the project's validation. In order of preference:
 
 ```bash
+.wiki/scripts/publish.sh       # most projects embed validation here
+# fallback if publish.sh is absent:
 [ -x .wiki/scripts/verify.sh ] && .wiki/scripts/verify.sh
 ```
 
-Don't proceed to commit if verify fails. Fix the wiki content first.
+Read the output. **Both errors and warnings block commit.** Warnings represent unfinished work — the wiki's compounding-knowledge guarantee depends on structural consistency, which validation surfaces but the LLM's draft pass may miss.
+
+If warnings or errors are non-zero: return to Step 3 to fix the underlying writes, then re-run Step 5. Iterate until clean. This Step-5 → Step-3 loop is the Triple-Pass discipline (Writer → Evaluator → Editor) that the canonical LLM Wiki pattern names as the invariant core.
+
+If the project's schema explicitly marks a class of warning as advisory, name that class in the log entry (Step 4) with explicit acknowledgment — don't ignore silently.
 
 ### Step 6 — Archive the source
 
@@ -96,7 +102,11 @@ So it isn't re-ingested next cycle.
 
 ### Step 7 — Exit
 
-Review the git diff. Commit when satisfied. `/mode off`, or transition to `/wiki-lint` to verify health before the next cycle.
+Review the git diff. Commit when satisfied.
+
+**Lint cadence**: if the wiki has accumulated ~10 cycles since the last `/wiki-lint` pass (check `log.md` for the most recent `lint` or `lint-fix` entry), transition to `/wiki-lint` now before exiting. The canonical pattern documents lint as part of the invariant core (production-validated 8-stage pipeline: ingestion → entity extraction → drafting → evaluation → editing → **lint → repair** → consolidation) — not an exit option. Roughly every 10 ingests is the practitioner-recommended frequency.
+
+Otherwise: `/mode off`.
 
 ## Discipline
 
