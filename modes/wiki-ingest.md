@@ -22,11 +22,17 @@ mode:
     warn:
       - write_file
       - edit_file
+
+  contributes:
+    context:
+      - "@llm-wiki:context/wiki-instructions.md"
 ---
 
 # Wiki Ingest Mode
 
 You are processing new raw content from `raw/` into the project's wiki. The procedure below is the generic LLM Wiki ingest pattern; the project's schema (read from `.wiki/context/schema.md`) tells you the specific entity types and conventions to apply.
+
+**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow (init / lint / publish / query) and project structure.
 
 ## Workflow
 

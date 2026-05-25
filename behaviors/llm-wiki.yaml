@@ -1,8 +1,11 @@
 bundle:
   name: llm-wiki-behavior
-  version: 0.1.0
+  version: 0.2.0
   description: Generic workflow modes for LLM-maintained wikis
 
-context:
-  include:
-    - llm-wiki:context/wiki-instructions.md
+# Truly zero-cost: this behavior is the install anchor only.
+# Including it composes the parent bundle, which causes the
+# modes/ directory to be discovered by the modes hook.
+# Wiki orientation (context/wiki-instructions.md) is contributed
+# by each wiki-* mode's contributes.context block — loaded only
+# while a wiki mode is active, never when the bundle is dormant.

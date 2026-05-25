@@ -21,11 +21,17 @@ mode:
     block:
       - write_file
       - edit_file
+
+  contributes:
+    context:
+      - "@llm-wiki:context/wiki-instructions.md"
 ---
 
 # Wiki Lint Mode
 
 You are running a wiki health check. **Read-only.** This mode reports problems; it does not fix them. To apply fixes, exit and use `/wiki-ingest`.
+
+**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow and project structure.
 
 ## Workflow
 

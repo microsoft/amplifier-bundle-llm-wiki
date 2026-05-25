@@ -1,6 +1,6 @@
 # Wiki Bundle Instructions
 
-This document is injected as context for any project that includes `amplifier-bundle-llm-wiki`. It tells the project's agent what the bundle provides and how to use it.
+A wiki workflow mode is active. This orientation is mounted by every `wiki-*` mode (`contributes.context`) and unmounts when you exit. It describes the cross-mode shape of the bundle so you know what's adjacent to your current mode.
 
 ## Available modes
 
