@@ -23,6 +23,8 @@ mode:
       - bash
 
   contributes:
+    context:
+      - "@llm-wiki:context/wiki-instructions.md"
     agents:
       wiki-policy-designer:
         source: "@llm-wiki:agents/wiki-policy-designer"
@@ -34,6 +36,7 @@ This mode is for projects newly adopting `amplifier-bundle-llm-wiki`. It walks t
 
 ## Capabilities while this mode is active
 
+- **Wiki orientation** (auto-injected) — `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context. It describes the full wiki workflow shape (other modes, project structure, transitions).
 - **Agent `wiki-policy-designer`** — Drafts the project-side scaffold files (`AGENTS.md`, `.wiki/context/schema.md`, `.wiki/scripts/publish.sh`, package skeleton, `.amplifier/settings.yaml`) from a finalized policy brief. Invoke via `delegate(agent="wiki-policy-designer", instruction="<full policy brief>")`.
 
 ## Workflow

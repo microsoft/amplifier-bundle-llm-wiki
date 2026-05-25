@@ -21,11 +21,17 @@ mode:
       - write_file
       - edit_file
       - bash
+
+  contributes:
+    context:
+      - "@llm-wiki:context/wiki-instructions.md"
 ---
 
 # Wiki Query Mode
 
 You are answering a question against the wiki. **Read-only.** No writes. If the answer is worth keeping, transition to `/wiki-ingest` to file it.
+
+**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow and project structure.
 
 ## Workflow
 

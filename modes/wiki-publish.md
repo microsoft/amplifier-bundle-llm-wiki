@@ -21,11 +21,17 @@ mode:
     block:
       - write_file
       - edit_file
+
+  contributes:
+    context:
+      - "@llm-wiki:context/wiki-instructions.md"
 ---
 
 # Wiki Publish Mode
 
 You are generating the shippable artifact via the project's `.wiki/scripts/publish.sh`. **High stakes**: the output is what downstream consumers see. Rollback is the project's responsibility.
+
+**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow and project structure.
 
 ## Workflow
 

@@ -1,74 +1,62 @@
-// llm-wiki: an Amplifier bundle that turns weekly meeting transcripts
-// into a structured "Team Pulse" content package (JSON data + narrative docs)
-// ready for publishing. This diagram shows the bundle's pieces and how they connect.
+// llm-wiki: an Amplifier bundle that turns weekly meeting transcripts into a structured Team Pulse content package (JSON data + narrative docs) for downstream publishing.
 digraph llm_wiki {
     rankdir=LR
     fontname="Helvetica"
     fontsize=12
-    label="LLM Wiki — Meeting Transcripts → Team Pulse Content\nAn Amplifier bundle (v0.1.0) for mining transcripts into structured docs"
+    label="LLM Wiki — Meeting Transcript to Team Pulse Content\nAn Amplifier bundle that mines weekly transcripts into structured content (v0.1.1)"
     labelloc=t
     labeljust=c
     nodesep=0.6
     ranksep=0.7
     bgcolor="white"
-    source_hash="c9ad53441df901b55d2ae37f11ceaf3c50b81edfcb55767aa2404b63b53c8bac"
+    source_hash="df951bbaff9c462a377a2986157e122a0ed21b7fe09c3c5a3980244ea0c7ebab"
 
     node [fontname="Helvetica", fontsize=11, style="filled,rounded"]
     edge [fontname="Helvetica", fontsize=9]
 
-    root_llm_wiki [label="LLM Wiki Bundle\nThe entry point — wires everything together\nllm-wiki v0.1.0\n0 tools · 0 agents\n~74 tok aggregate", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", penwidth=2]
+    root_llm_wiki [label="LLM Wiki Bundle\nThe entry point — wires everything together\nv0.1.1\n0 tools · 0 agents\n~74 tok aggregate", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", penwidth=2]
 
     subgraph cluster_behaviors {
-        label="Behaviors — Workflow Modes Loaded into Amplifier"
+        label="Behaviors — Workflow Instructions"
         style="filled"
         fillcolor="#f9f9f9"
         color="#999999"
 
-        beh_llm_wiki_behavior [label="Wiki Workflow Behavior\nDefines the ingest / lint / publish / query modes\nllm-wiki-behavior\n1 ctx\n~562 tok", shape=box, fillcolor="#e0f2f1", style="filled,rounded"]
+        beh_llm_wiki_behavior [label="Wiki Workflow Guide\nHow to ingest, lint, and publish content\n(llm-wiki-behavior)\n~121 tok", shape=box, fillcolor="#e0f2f1", style="filled,rounded"]
     }
 
     subgraph cluster_agents {
-        label="Agents — Specialists the Bundle Can Call"
+        label="Agents — Specialized Helpers"
         style="filled"
         fillcolor="#f9f9f9"
         color="#999999"
 
-        agt_wiki_policy_designer [label="Wiki Policy Designer\nHelps shape the schema and editorial rules\nwiki-policy-designer\n~176 tok desc", shape=box, fillcolor="#c8e6c9", style="filled,rounded"]
-    }
-
-    subgraph cluster_context {
-        label="Context Files — Instructions & Knowledge Loaded at Runtime"
-        style="filled"
-        fillcolor="#f9f9f9"
-        color="#999999"
-
-        ctx_wiki_instructions_md [label="Wiki Instructions\nThe playbook the behavior reads to do its work\nwiki-instructions.md\n~518 tok", shape=box, fillcolor="#e1bee7", style="filled,rounded"]
+        agt_wiki_policy_designer [label="Wiki Policy Designer\nShapes the rules for what content gets captured\n(wiki-policy-designer)\n~176 tok desc", shape=box, fillcolor="#c8e6c9", style="filled,rounded"]
     }
 
     subgraph cluster_legend {
-        label="Legend — How to Read This Diagram"
+        label="Legend — What Each Color Means"
         style="filled"
         fillcolor="white"
         color="#cccccc"
         fontsize=9
 
-        leg_root [label="root bundle", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", fontsize=9]
-        leg_behavior [label="behavior", shape=box, fillcolor="#e0f2f1", style="filled,rounded", fontsize=9]
-        leg_agent [label="agent", shape=box, fillcolor="#c8e6c9", style="filled,rounded", fontsize=9]
-        leg_module [label="module", shape=box, fillcolor="#bbdefb", style="filled,rounded", fontsize=9]
-        leg_provider [label="provider", shape=box, fillcolor="#e0e0e0", style="filled,rounded", fontsize=9]
-        leg_context [label="context", shape=box, fillcolor="#e1bee7", style="filled,rounded", fontsize=9]
-        leg_standalone [label="standalone", shape=box, fillcolor="#80cbc4", style="filled,rounded", fontsize=9]
-        leg_experiment [label="experiment", shape=box, fillcolor="#e1bee7", style="filled,rounded", fontsize=9]
-        leg_ext_cost [label="ext+cost", shape=box, fillcolor="#80cbc4", style="dashed", color="red", penwidth=2, fontsize=9]
-        leg_ext_muted [label="ext+no-cost", shape=box, fillcolor="#f5f5f5", style="dashed", fontsize=9]
+        leg_root [label="Bundle root\n(the whole package)", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", fontsize=9]
+        leg_behavior [label="Behavior\n(workflow instructions)", shape=box, fillcolor="#e0f2f1", style="filled,rounded", fontsize=9]
+        leg_agent [label="Agent\n(a specialized helper)", shape=box, fillcolor="#c8e6c9", style="filled,rounded", fontsize=9]
+        leg_module [label="Module\n(reusable code unit)", shape=box, fillcolor="#bbdefb", style="filled,rounded", fontsize=9]
+        leg_provider [label="Provider\n(AI model connection)", shape=box, fillcolor="#e0e0e0", style="filled,rounded", fontsize=9]
+        leg_context [label="Context\n(background info)", shape=box, fillcolor="#e1bee7", style="filled,rounded", fontsize=9]
+        leg_standalone [label="Standalone item", shape=box, fillcolor="#80cbc4", style="filled,rounded", fontsize=9]
+        leg_experiment [label="Experimental", shape=box, fillcolor="#e1bee7", style="filled,rounded", fontsize=9]
+        leg_ext_cost [label="External + adds cost\n(borrowed, counted later)", shape=box, fillcolor="#80cbc4", style="dashed", color="red", penwidth=2, fontsize=9]
+        leg_ext_muted [label="External, no cost\n(borrowed, free)", shape=box, fillcolor="#f5f5f5", style="dashed", fontsize=9]
     }
 
-    disclaimer [label="How to read the cost numbers:\n~4 characters ≈ 1 token (rough estimate)\nSolid border = lives in this bundle (counted)\nDashed + red = brought in from outside, adds cost (not counted here)\nDashed + muted = brought in from outside, no extra cost\nNot included: child sessions, anything decided at runtime", shape=note, fillcolor="#eceff1", style="filled", fontsize=9]
+    disclaimer [label="Reading the numbers:\n• ~N tok = rough size in AI tokens (~4 chars per token)\n• Solid border = part of this bundle (counted)\n• Dashed + red = borrowed from elsewhere, adds hidden cost\n• Dashed + grey = borrowed, no cost\n• Excludes sub-sessions and runtime-dynamic content", shape=note, fillcolor="#eceff1", style="filled", fontsize=9]
 
-    ext_githttps___github_com_microsoft_amplifier_bundle_modes_main [label="Amplifier Modes Bundle\nExternal — provides the /modes command system\namplifier-bundle-modes\n(external, cost)", shape=box, fillcolor="#80cbc4", style="dashed", color="red", penwidth=2]
+    ext_githttps___github_com_microsoft_amplifier_bundle_modes_main [label="Amplifier Modes Bundle\nBorrowed from another repo — provides the /modes commands\n(amplifier-bundle-modes, external, cost)", shape=box, fillcolor="#80cbc4", style="dashed", color="red", penwidth=2]
 
     root_llm_wiki -> ext_githttps___github_com_microsoft_amplifier_bundle_modes_main [style=dashed]
     root_llm_wiki -> beh_llm_wiki_behavior [label="composes"]
-    beh_llm_wiki_behavior -> ctx_wiki_instructions_md [style=dotted, color=purple]
 }
