@@ -58,17 +58,36 @@ When in doubt: read first, narrate intent, ask before destroying.
 ### Your job
 
 1. **Validate inputs** — check that `domain`, `schema_choice`, `publish_target`, `project_root`, and `package_name` are present.
-2. **Draft and write** these files:
-   - `AGENTS.md` — project orientation (30-60 lines, mode list, lifecycle)
-   - `raw/.gitkeep` — immutable source inbox
-   - `<package-dir>/index.md` — wiki package stub with one paragraph
-   - `.wiki/context/schema.md` — project's schema reference
-   - `.wiki/scripts/publish.sh` — the project's publish implementation
-   - `.wiki/scripts/verify.sh` (optional) — adapted from bundle reference
-   - `.wiki/scripts/freshness.sh` (optional) — SHA-based source staleness check
-   - `.amplifier/settings.yaml` — minimal Amplifier config with bundle include
+2. **Draft and write** these files. **Layout follows the three-zone convention** (see "Three-zone layout" below):
+   - **Root files** (always at `project_root/`):
+     - `AGENTS.md` — project orientation (30-60 lines, mode list, lifecycle, three-zone layout)
+     - `README.md` — repo-level orientation for someone cloning the repo cold
+     - `.gitignore` — patterns for `raw/**` (contents only), `.wiki/dist/`, plus any project-specific transient artifacts
+     - `raw/.gitkeep` — immutable source inbox (folder committed, contents gitignored)
+     - `.amplifier/settings.yaml` — **self-sufficient** Amplifier config (see template below)
+   - **Wiki content** (at `<package-dir>/`, shippable boundary):
+     - `<package-dir>/README.md` — team-facing orientation (the only README that ships in the zip)
+   - **Operational scaffolding** (at `.wiki/`, NOT in the zip):
+     - `.wiki/context/schema.md` — machine-oriented schema reference for ingest agents
+     - `.wiki/scripts/publish.sh` — the project's publish implementation (writes to `.wiki/dist/`)
+     - `.wiki/scripts/verify.sh` (optional) — adapted from bundle reference
+     - `.wiki/scripts/freshness.sh` (optional) — SHA-based source staleness check
 3. **Make scripts executable** — `chmod +x` every script you create.
 4. **Report back** — list every file written with a 1-line description.
+
+**Note**: the scaffold above is the *minimum* universal set. The project may also want files like an ingest-policy doc, an audit log, an issues tracker, etc. — those are project-specific mechanisms and emerge from the policy brief, not from this bundle's scaffold. Scaffold only what the brief specifies; everything else gets created by `/wiki-ingest` or other operational modes when the project's chosen mechanisms first fire.
+
+### Three-zone layout (the load-bearing convention)
+
+Every adopting project has exactly three zones, defined by **what kind of file lives there**, not by which specific files:
+
+| Zone | Kind of file | In zip? |
+|------|---------|---------|
+| **Repo root** | User-facing persistent files manually authored or hand-maintained: project orientation (`AGENTS.md`), repo orientation (`README.md`), ignore patterns (`.gitignore`), Amplifier config (`.amplifier/settings.yaml`), source inbox marker (`raw/.gitkeep`), and any persistent operating documents the project chooses to keep (audit logs, policy docs, etc.) | No |
+| **`<package-dir>/`** | Shippable content. The wiki itself. Pages, indexes, the `README.md` zip recipients see. | **Yes** — this is what ships |
+| **`.wiki/`** | Operational scaffolding + generated/transient artifacts: project-specific context files (`context/schema.md`), scripts (`scripts/*.sh`), zip output (`dist/`), and any transient reports the project's modes generate (review reports, lint output, etc.) | No |
+
+**The rule of thumb (load-bearing)**: anything that doesn't go into `<package-dir>/` and isn't a user-facing persistent file goes into `.wiki/`. This keeps the shippable boundary clean and the operational mess in one place. When a project's `/wiki-ingest` or other workflow mode produces a transient artifact (a review report, an analysis dump, a diagnostic), it should be written under `.wiki/` — never at the repo root, never inside `<package-dir>/`.
 
 If the instruction is incomplete, you stop and report the missing field (see **Red Flags** below).
 
@@ -167,17 +186,52 @@ Copy from `<bundle>/scripts/freshness.sh`. Make executable. (No customization ne
 
 ### `.amplifier/settings.yaml`
 
-Minimal config:
+**Self-sufficient config that works on a fresh clone with no manual `amplifier bundle` commands.** The behavior bundle alone has no orchestrator — a base bundle (e.g. `amplifier-dev`) must be active, and `llm-wiki` must be added as an app overlay.
+
+The template:
+
 ```yaml
-includes:
-  - bundle: git+https://github.com/<owner>/amplifier-bundle-llm-wiki@main
+bundle:
+  active: amplifier-dev
+  added:
+    amplifier-dev: git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/amplifier-dev.yaml
+    llm-wiki: git+https://github.com/bkrabach/amplifier-bundle-llm-wiki@main#subdirectory=behaviors/llm-wiki.yaml
+  app:
+    - llm-wiki
 ```
 
-If the user is in local dogfooding mode, use a local path:
+For local dogfooding, substitute a local path for the `llm-wiki` source:
+
 ```yaml
-includes:
-  - bundle: /path/to/amplifier-bundle-llm-wiki
+bundle:
+  active: amplifier-dev
+  added:
+    amplifier-dev: git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/amplifier-dev.yaml
+    llm-wiki: /absolute/path/to/amplifier-bundle-llm-wiki/behaviors/llm-wiki.yaml
+  app:
+    - llm-wiki
 ```
+
+**Why this shape and not `includes:`**: `includes:` doesn't supply a session orchestrator. A bundle without an orchestrator fails at session creation with `ValueError: Configuration must specify session.orchestrator`. The `active`/`added`/`app` shape is what `amplifier bundle use` writes and what `amplifier run` reads. The behavior composes as an app overlay on top of the base bundle, which supplies the orchestrator.
+
+### `.gitignore`
+
+Universal patterns. Add project-specific entries as the project's workflow defines them.
+
+```
+# Raw inbox — folder committed (via .gitkeep), contents not
+raw/**
+!raw/.gitkeep
+
+# Published artifacts
+.wiki/dist/
+```
+
+**Project-specific patterns** the project may add later (when its workflow modes start producing them): transient review reports under `.wiki/`, lint output, analysis dumps, etc. The placement rule (`.wiki/` for transient artifacts) tells projects WHERE — they decide the WHAT and add patterns to `.gitignore` as those artifacts come into existence.
+
+### `README.md` (repo-level)
+
+Short repo-level orientation for someone cloning the repo cold. Distinct from `<package-dir>/README.md` which is for zip recipients. Template ~30-50 lines covering: what this repo is, the three-zone layout, the typical workflow (`raw/ → /wiki-ingest → wiki/`, `git commit`, `/wiki-publish`).
 
 ---
 
@@ -209,29 +263,52 @@ List every file written so the user can `git status` and verify before committin
 
 ## Output Checklist
 
-- [ ] `AGENTS.md` created and readable (30-60 lines)
-- [ ] `raw/.gitkeep` created with note
-- [ ] `<package-dir>/index.md` created with domain summary
+Root files (universal):
+- [ ] `AGENTS.md` created and readable (30-60 lines, names the three-zone layout, names any project-specific files the policy brief specifies)
+- [ ] `README.md` (repo-level) created
+- [ ] `.gitignore` created with `raw/**` (except .gitkeep) and `.wiki/dist/` (universal patterns)
+- [ ] `raw/.gitkeep` created
+- [ ] `.amplifier/settings.yaml` created with **self-sufficient** bundle config (`active` base + `llm-wiki` as app overlay — NOT `includes:`)
+
+Project-specific root files (only if specified in the policy brief — e.g. audit log, ingest-policy doc):
+- [ ] Any persistent operating documents the brief calls out, seeded with structure (no fabricated content)
+
+Wiki content boundary:
+- [ ] `<package-dir>/README.md` created (team-facing orientation that ships in the zip)
+
+Operational scaffolding:
 - [ ] `.wiki/context/schema.md` created with full schema reference
-- [ ] `.wiki/scripts/publish.sh` created and executable
-- [ ] `.amplifier/settings.yaml` created with bundle include
-- [ ] All scripts have executable permissions
-- [ ] Project root has proper directory structure:
+- [ ] `.wiki/scripts/publish.sh` created and executable; writes to `.wiki/dist/`
+- [ ] `.wiki/scripts/verify.sh` (optional) created and executable
+- [ ] `.wiki/scripts/freshness.sh` (optional) created and executable
+
+Sanity:
+- [ ] All scripts have executable permissions (`chmod +x`)
+- [ ] Project root has the three-zone structure:
   ```
   <project-root>/
-  ├── AGENTS.md
+  ├── AGENTS.md                  ← root: user-facing conventions
+  ├── README.md                  ← root: repo orientation
+  ├── .gitignore                 ← root: ignore patterns
+  ├── .amplifier/
+  │   └── settings.yaml          ← root: self-sufficient bundle config
   ├── raw/
-  ├── <package-dir>/
-  │   └── index.md
-  ├── .wiki/
-  │   ├── context/
-  │   │   └── schema.md
-  │   └── scripts/
-  │       ├── publish.sh
-  │       ├── verify.sh (optional)
-  │       └── freshness.sh (optional)
-  └── .amplifier/
-      └── settings.yaml
+  │   └── .gitkeep               ← committed inbox (contents ignored)
+  ├── <package-dir>/             ← shippable content boundary (the wiki)
+  │   └── README.md              ← team-facing orientation (ships in zip)
+  └── .wiki/                     ← operational scaffolding (NOT in zip)
+      ├── context/
+      │   └── schema.md
+      ├── scripts/
+      │   ├── publish.sh         ← writes to .wiki/dist/
+      │   ├── verify.sh          (optional)
+      │   └── freshness.sh       (optional)
+      └── dist/                  ← zip output, gitignored
+
+  # Plus any project-specific files in the appropriate zone:
+  #   - persistent operating docs (audit logs, policy files) → root
+  #   - transient/generated reports (ingest review, lint output) → .wiki/
+  #   - schema-defined entity files → <package-dir>/
   ```
 
 ---

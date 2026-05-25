@@ -71,23 +71,30 @@ For each entity/concept/decision in the update plan:
 
 Touch the index and any catalog files the schema names.
 
-### Step 4 — Append to log
+### Step 4 — Record what happened
 
-One entry per cycle in the project's log file (typically `log.md` at the package root or per-pod):
+The project decides *how* it tracks ingest activity (audit log, learnings file, both, neither). The bundle does not mandate a specific file or format. Read the project's `AGENTS.md` and `.wiki/context/schema.md` to see what the project has chosen.
 
-```
-## [YYYY-MM-DD] ingest | <source title>
-- pages touched: <list>
-- entities created: <list>
-- contradictions surfaced: <list, or "none">
-```
+Typical patterns projects use:
+
+- **Audit log at the repo root** (often `log.md` or similar): one entry per cycle with what was touched. Persists across sessions.
+- **A learnings file at the repo root**: principles or skip rules that improve future classifications. Project-defined discipline.
+- **Transient review reports under `.wiki/`**: e.g. uncertain-classification reports for the maintainer to review. Regenerated each run.
+
+**Placement principle** (load-bearing, from the bundle's three-zone convention):
+
+- Persistent files the human reads → **repo root** (alongside `AGENTS.md`).
+- Transient artifacts your ingest produces (review reports, diagnostic dumps, anything the maintainer reviews then throws away) → **`.wiki/`**, never at the repo root, never inside `<package-dir>/`.
+- Content for the wiki audience → **`<package-dir>/`** (the shippable boundary).
+
+If the project hasn't yet decided how it tracks activity, do the minimum: write any low-confidence calls to a transient report under `.wiki/` (the project can rename or restructure later), and surface to the maintainer that the project may want to formalize an audit/learnings convention. **Do not** invent persistent files at the repo root without the project's policy directing you to.
 
 ### Step 5 — Verify (mandatory gate)
 
 Run the project's validation. In order of preference:
 
 ```bash
-.wiki/scripts/publish.sh       # most projects embed validation here
+.wiki/scripts/publish.sh       # most projects embed validation here; writes to .wiki/dist/
 # fallback if publish.sh is absent:
 [ -x .wiki/scripts/verify.sh ] && .wiki/scripts/verify.sh
 ```

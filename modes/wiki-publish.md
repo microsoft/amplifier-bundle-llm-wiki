@@ -31,7 +31,9 @@ mode:
 
 You are generating the shippable artifact via the project's `.wiki/scripts/publish.sh`. **High stakes**: the output is what downstream consumers see. Rollback is the project's responsibility.
 
-**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow and project structure.
+**Output target**: `.wiki/dist/` by convention. The script writes its zip + manifest there. `.wiki/dist/` is gitignored.
+
+**Wiki orientation auto-injected:** `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context — it describes the cross-mode workflow and the three-zone structure.
 
 ## Workflow
 
@@ -63,7 +65,7 @@ Report the script's output verbatim. If it produces artifacts (zip files, build 
 
 After publish:
 
-- If the script writes to a target directory (zips, a build dir), list what's there now.
+- If the script writes to `.wiki/dist/` (the conventional local target), list what's there now (`ls -la .wiki/dist/`).
 - If the script writes externally (push to a remote, HTTP POST, S3 sync), confirm the script reported success.
 - Run `.wiki/scripts/verify-published.sh` if it exists.
 
