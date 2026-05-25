@@ -16,10 +16,9 @@ mode:
       - todo
       - mode
       - delegate
-    warn:
+    block:
       - write_file
       - edit_file
-    block:
       - bash
 
   contributes:
@@ -32,12 +31,18 @@ mode:
 
 # Wiki Init Mode
 
-This mode is for projects newly adopting `amplifier-bundle-llm-wiki`. It walks the user through the policy decisions the bundle deliberately leaves abstract (schema, publish target, viewer), then dispatches the contributed `wiki-policy-designer` agent to draft the project-side scaffold.
+This mode is for projects newly adopting `amplifier-bundle-llm-wiki`. The mode's job is to **resolve the policy brief and then delegate scaffolding to the `wiki-policy-designer` agent**. The mode itself does not scaffold inline — `write_file` and `edit_file` are blocked at the mode level precisely to enforce this.
+
+## Discipline (load-bearing)
+
+**Scaffolding is ALWAYS delegated.** The `wiki-policy-designer` agent carries the authoritative spec for what to write — including the three-zone layout, the self-sufficient `.amplifier/settings.yaml` shape, the read-before-write discipline, and the universal scaffold file list. If you try to scaffold from inside this mode, `write_file` and `edit_file` will fail. That's the design.
+
+This holds even when the user provides a complete policy brief in their first message. **Do not skip delegation.** Confirm the brief is complete, then delegate to `wiki-policy-designer` in a single shot.
 
 ## Capabilities while this mode is active
 
 - **Wiki orientation** (auto-injected) — `@llm-wiki:context/wiki-instructions.md` is prepended to this mode's context. It describes the full wiki workflow shape (other modes, project structure, transitions).
-- **Agent `wiki-policy-designer`** — Drafts the project-side scaffold files (`AGENTS.md`, `.wiki/context/schema.md`, `.wiki/scripts/publish.sh`, package skeleton, `.amplifier/settings.yaml`) from a finalized policy brief. Invoke via `delegate(agent="wiki-policy-designer", instruction="<full policy brief>")`.
+- **Agent `wiki-policy-designer`** (REQUIRED for all scaffolding) — Drafts the project-side scaffold files from a finalized policy brief. The agent's spec is authoritative: it enforces the three-zone layout, scaffolds the self-sufficient `.amplifier/settings.yaml`, applies the read-before-write merge discipline, and produces the universal scaffold (`AGENTS.md`, `README.md`, `.gitignore`, `raw/.gitkeep`, `.amplifier/settings.yaml`, `<package-dir>/README.md`, `.wiki/context/schema.md`, `.wiki/scripts/publish.sh`). Invoke via `delegate(agent="wiki-policy-designer", instruction="<full policy brief>")`.
 
 ## Workflow
 
@@ -67,9 +72,9 @@ Walk through these decisions, stating the trade-off for each:
 - **Publish trigger**: manual `/wiki-publish`, post-commit hook, scheduled
 - **Format**: raw markdown, processed JSON, packaged zip, build artifacts
 
-### Phase 4 — Scaffold
+### Phase 4 — Scaffold (REQUIRED delegation, no inline writes)
 
-Hand off to the contributed agent with a complete brief:
+This phase is non-optional. The mode cannot scaffold files — `write_file` and `edit_file` are blocked at the mode level. Delegate to `wiki-policy-designer` with a complete brief:
 
 ```
 delegate(
@@ -77,18 +82,22 @@ delegate(
   instruction="""
   Scaffold project at <project root>:
   - domain: <from phase 1>
-  - schema choice: <from phase 2>
-  - publish target: <from phase 3>
-  - package directory name: <from phase 2>
+  - schema_choice: <from phase 2>
+  - publish_target: <from phase 3>
+  - package_name: <from phase 2>
+  - project_root: <absolute path>
 
   Write the project-side scaffold files per your spec.
+  Apply the three-zone convention. Produce a self-sufficient .amplifier/settings.yaml.
   """
 )
 ```
 
-The agent drafts the files. You confirm each `write_file`/`edit_file` (first prompt only — subsequent writes proceed silently per `warn` policy).
+If the user provided a complete brief in their opening message, skip Phases 1–3 and go straight to delegation. Do not improvise the scaffold inline. The agent enforces conventions that are easy to miss when scaffolding by hand (`.amplifier/settings.yaml` shape, three-zone placement, AGENTS.md content, etc.).
 
-## Discipline
+After the agent returns, surface its summary to the user. The user reviews the diff and commits.
+
+## Additional discipline
 
 - **Don't fork the bundle to add project specifics.** Use `.wiki/` extension points instead.
 - **Don't over-engineer the schema.** Start minimal; grow it as patterns emerge.
