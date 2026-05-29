@@ -69,6 +69,10 @@ Short version:
 - [`amplifier-bundle-modes`](https://github.com/microsoft/amplifier-bundle-modes) — provides the mode mechanism this bundle ships modes for. See [§9.7 "Workflow Modes with Shared Orientation"](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#97-workflow-modes-with-shared-orientation) — this bundle is documented there as the canonical reference implementation
 - Reference implementations studied: alirezarezvani/claude-skills, balukosuri/llm-wiki-karpathy, balukosuri/wiki-from-code, lucasastorian/llmwiki, xoai/sage-wiki, tobi/qmd, garrytan/gbrain, NousResearch/hermes-agent
 
+## License
+
+MIT — see [LICENSE](LICENSE).
+
 ## Contributing
 
 > [!NOTE]
@@ -93,7 +97,3 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
