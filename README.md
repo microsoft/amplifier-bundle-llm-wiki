@@ -20,34 +20,36 @@ The bundle does NOT ship policy: schema, entity vocabulary, publish target, view
 
 ## Install
 
-Add the bundle's behavior file as an app overlay in your project (the canonical zero-cost-when-dormant install path — modes are discovered structurally; nothing is injected until you activate a wiki mode):
+The bundle ships as part of `amplifier-foundation`, so the easiest install is the `amplifier-dev` standalone — it pulls in `amplifier-foundation` (which includes this bundle's behavior file) along with everything else needed for a working Amplifier session:
+
+```bash
+amplifier bundle add --active git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/amplifier-dev.yaml
+```
+
+The five `/wiki-*` modes are then discoverable via `/modes` immediately. **Zero token cost is added to your session context until you activate one of the wiki modes** — the behavior file is just configuration that wires up structural mode discovery; nothing about wiki is sent to the LLM until you start using it. See the [zero-cost install-anchor pattern](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#14-structural-discovery-how-modes-gets-scanned) documented in `amplifier-bundle-modes`.
+
+If you'd rather not use the `amplifier-dev` standalone and just want the wiki bundle layered onto an existing base setup, install the behavior file as an app overlay (your active base bundle must include mode infrastructure):
 
 ```bash
 amplifier bundle add --app git+https://github.com/microsoft/amplifier-bundle-llm-wiki@main#subdirectory=behaviors/llm-wiki.yaml
 ```
 
-Equivalent if you prefer editing `.amplifier/settings.yaml` directly:
+Equivalent in `.amplifier/settings.yaml`:
 
 ```yaml
 app:
   - git+https://github.com/microsoft/amplifier-bundle-llm-wiki@main#subdirectory=behaviors/llm-wiki.yaml
 ```
 
-> **Why the behavior file, not the bundle root?** The bundle uses the [zero-cost install-anchor pattern](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#14-structural-discovery-how-modes-gets-scanned) documented in `amplifier-bundle-modes`. Composing the behavior file triggers the bundle's `modes/` directory to be scanned automatically — no `modes:` declaration needed — while keeping persistent token cost at ~195 (no orientation context loaded until a wiki mode is active).
-
-You also need a base bundle with a configured orchestrator and provider. If you haven't set one up, `amplifier-dev` is a reasonable default:
-
-```bash
-amplifier bundle add --active git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/amplifier-dev.yaml
-```
-
 Then bootstrap your project:
 
 ```
-/wiki-init
+/wiki-init <describe your wiki>
 ```
 
-`/wiki-init` walks through the policy decisions (schema, publish target, viewer) and scaffolds the project-side files. Subsequent cycles use `/wiki-ingest` → `/wiki-lint` → `/wiki-publish`. See [AGENTS.md](AGENTS.md) for the operational cycle.
+> **Pass a request alongside the mode activation.** `/wiki-init` alone just enters the mode — it doesn't do anything until you give it a brief. Either pass a request on the activation line (e.g. `/wiki-init I want to track weekly team meetings and ship a JSON-backed dashboard`) or activate first and follow up with a request in your next message. The same applies to the other `/wiki-*` modes.
+
+`/wiki-init` walks through the policy decisions (schema, publish target, viewer) and scaffolds the project-side files. Subsequent cycles use `/wiki-ingest <source>` → `/wiki-lint` → `/wiki-publish`. See [AGENTS.md](AGENTS.md) for the operational cycle.
 
 ## Architecture
 
@@ -61,7 +63,7 @@ Short version:
 
 ## Status
 
-`0.2.x` — five workflow modes (`wiki-init`, `wiki-ingest`, `wiki-lint`, `wiki-publish`, `wiki-query`) and one contributed agent (`wiki-policy-designer`). Refactored to the zero-cost-when-dormant pattern: bundle composition contributes nothing to the session until a wiki mode is activated.
+`0.2.x` — five workflow modes (`wiki-init`, `wiki-ingest`, `wiki-lint`, `wiki-publish`, `wiki-query`) and one contributed agent (`wiki-policy-designer`). Refactored to the zero-cost-when-dormant pattern: bundle composition contributes zero tokens to the session context until a wiki mode is activated.
 
 ## Lineage
 
