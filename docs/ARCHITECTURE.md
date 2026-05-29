@@ -1,8 +1,8 @@
 # Architecture
 
 > Bundle: `amplifier-bundle-llm-wiki`
-> Status: 0.1.0 scaffold; modes not yet authored
-> Last updated: 2026-05-20
+> Status: 0.2.x — five workflow modes authored; zero-cost-when-dormant pattern (per [`amplifier-bundle-modes` schema reference §9.7](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#97-workflow-modes-with-shared-orientation))
+> Last updated: 2026-05-28
 
 ## Purpose
 

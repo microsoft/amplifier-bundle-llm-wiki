@@ -195,7 +195,7 @@ bundle:
   active: amplifier-dev
   added:
     amplifier-dev: git+https://github.com/microsoft/amplifier-foundation@main#subdirectory=bundles/amplifier-dev.yaml
-    llm-wiki: git+https://github.com/bkrabach/amplifier-bundle-llm-wiki@main#subdirectory=behaviors/llm-wiki.yaml
+    llm-wiki: git+https://github.com/microsoft/amplifier-bundle-llm-wiki@main#subdirectory=behaviors/llm-wiki.yaml
   app:
     - llm-wiki
 ```
