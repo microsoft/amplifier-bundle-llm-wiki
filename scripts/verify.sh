@@ -16,7 +16,7 @@
 
 set -eu
 
-WIKI_DIR="${1:-team-pulse-package}"
+WIKI_DIR="${1:-wiki}"
 
 if [ ! -d "$WIKI_DIR" ]; then
   echo "verify: directory $WIKI_DIR not found"

@@ -1,8 +1,7 @@
 # Architecture
 
 > Bundle: `amplifier-bundle-llm-wiki`
-> Status: 0.2.x — five workflow modes authored; zero-cost-when-dormant pattern (per [`amplifier-bundle-modes` schema reference §9.7](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#97-workflow-modes-with-shared-orientation))
-> Last updated: 2026-05-28
+> Status: five workflow modes; zero-cost-when-dormant pattern (per [`amplifier-bundle-modes` schema reference §9.7](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#97-workflow-modes-with-shared-orientation))
 
 ## Purpose
 
@@ -17,7 +16,7 @@ The pattern in one paragraph: instead of having an LLM rediscover knowledge from
 Amplifier's mode mechanism (via `amplifier-bundle-modes`) gives us:
 
 - **Tool policy enforcement** — each mode declares what tools are safe/warn/confirm/block
-- **Lazy context loading** — mode bodies are injected only when the relevant mode is active; zero token cost when inactive (v0.1.0 carries operational guidance in mode bodies; `contributes.context` for separately-managed reference files is planned for v0.2)
+- **Lazy context loading** — mode bodies are injected only when the relevant mode is active; zero token cost when inactive. Operational guidance lives in the mode bodies, and shared orientation (`context/wiki-instructions.md`) is mounted per-mode via `contributes.context`, so it loads only while a wiki mode is active
 - **Specialist agent + skill contribution** — modes can lazily mount agents and skills, removed on deactivation
 - **Allowed transitions** — modes can declare valid follow-on modes, enabling guided workflows
 
@@ -83,7 +82,7 @@ mode:
     warn: [write_file, edit_file]
 
   contributes:
-    # agents, context, skills — empty for v0.1.0
+    # agents, context, skills — e.g. wiki-instructions.md via contributes.context
 ---
 
 # Wiki Ingest Mode
@@ -109,11 +108,11 @@ A project that includes this bundle can extend at these well-defined points:
 
 | Point | Mechanism | Example |
 |---|---|---|
-| Schema | Project supplies `.wiki/context/schema.md` referenced by modes | Team-pulse: JSON-with-narrative-docs hybrid; `sources[]` cross-refs |
-| Publish | Project supplies `.wiki/scripts/publish.sh` invoked by `/wiki-publish` | Team-pulse: regenerate two zips for handoff |
-| Verify | Project supplies `.wiki/scripts/verify-ext.sh` (optional) called after generic `verify.sh` | Team-pulse: JSON parse + cross-ref integrity |
+| Schema | Project supplies `.wiki/context/schema.md` referenced by modes | e.g. a JSON-with-narrative-docs hybrid with `sources[]` cross-refs |
+| Publish | Project supplies `.wiki/scripts/publish.sh` invoked by `/wiki-publish` | e.g. regenerate a zip package for handoff |
+| Verify | Project supplies `.wiki/scripts/verify-ext.sh` (optional) called after generic `verify.sh` | e.g. JSON parse + cross-ref integrity |
 | Mode override | Project drops `.amplifier/modes/<name>.md` with same `name:` to fully replace a bundle mode | Rarely needed; prefer schema + scripts |
-| Project context | Project AGENTS.md, optionally additional `.wiki/context/*.md` | Team-pulse: workspace conventions, pod taxonomy |
+| Project context | Project AGENTS.md, optionally additional `.wiki/context/*.md` | e.g. workspace conventions, domain taxonomy |
 
 The bundle never reads project-specific information directly. It reads its own context files (which describe the *pattern*) and shells out to scripts at known paths.
 
@@ -127,7 +126,7 @@ The `.wiki/context/schema.md` and `.wiki/scripts/*.sh` paths are a **public inte
 
 ### Token cost target
 
-Mode bodies should aim for **<800 tokens each** at v0.1.0. Once a mode body exceeds that, extract operational reference into `context/<name>-reference.md` and reference via `contributes.context` (planned for v0.2).
+Mode bodies should aim for **<800 tokens each**. Once a mode body exceeds that, extract operational reference into `context/<name>-reference.md` and mount it via `contributes.context`.
 
 ## Composition
 

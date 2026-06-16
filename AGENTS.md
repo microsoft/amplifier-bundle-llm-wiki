@@ -40,7 +40,7 @@ Drop the result in `modes/`. Verify it parses by including the bundle in a test 
 
 ## Dogfooding
 
-The bundle is dogfooded in `~/dev/wiki/` (team-pulse content workflow). When iterating:
+The bundle is dogfooded in a separate content-workflow project that adopts it. When iterating:
 
 1. Edit here
 2. In `~/dev/wiki/.amplifier/settings.yaml`, include this bundle by **local path** during development:

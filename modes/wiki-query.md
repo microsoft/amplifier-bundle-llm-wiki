@@ -25,6 +25,7 @@ mode:
   contributes:
     context:
       - "@llm-wiki:context/wiki-instructions.md"
+      - "@llm-wiki:docs/llm-wiki-pattern.md"
 ---
 
 # Wiki Query Mode
@@ -37,7 +38,7 @@ You are answering a question against the wiki. **Read-only.** No writes. If the 
 
 ### Step 1 — Read the index first
 
-Check `.wiki/context/schema.md` for the project's index location (typically `index.md` at the package root, or a structured manifest). Read it. Identify the 3–10 most relevant pages.
+Read the wiki's index — by default `<package-dir>/index.md`, the catalog defined in the orientation's index/log contract. (If the project's `.wiki/context/schema.md` points the index elsewhere or uses a structured manifest, follow that.) Identify the 3–10 most relevant pages.
 
 ### Step 2 — Drill
 
@@ -50,7 +51,7 @@ Do **not** read raw sources in `raw/archive/` unless absolutely necessary — th
 Produce the answer with citations. Every claim should reference the wiki page it came from. Use whichever citation style the project's schema specifies:
 
 - `[[wikilink]]` style: "Per [[concepts/x]], the system ..."
-- `path:line` style: "(`team-pulse-package/data/projects/auth.json:42`)"
+- `path:line` style: "(`<package-dir>/data/projects/auth.json:42`)"
 
 ### Step 4 — Offer to file the answer
 

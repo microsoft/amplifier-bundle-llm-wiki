@@ -1,9 +1,9 @@
-// llm-wiki: an Amplifier bundle that turns weekly meeting transcripts into a structured Team Pulse content package (JSON data + narrative docs) for downstream publishing.
+// llm-wiki: an Amplifier bundle that ships the Karpathy LLM Wiki pattern as five composable workflow modes (init, ingest, lint, publish, query) for building and maintaining an LLM-curated, cross-referenced markdown knowledge base.
 digraph llm_wiki {
     rankdir=LR
     fontname="Helvetica"
     fontsize=12
-    label="LLM Wiki — Meeting Transcript to Team Pulse Content\nAn Amplifier bundle that mines weekly transcripts into structured content (v0.1.1)"
+    label="LLM Wiki — Workflow Modes for LLM-Maintained Wikis\nFive composable modes that ingest raw sources into a cross-referenced markdown knowledge base"
     labelloc=t
     labeljust=c
     nodesep=0.6
@@ -14,7 +14,7 @@ digraph llm_wiki {
     node [fontname="Helvetica", fontsize=11, style="filled,rounded"]
     edge [fontname="Helvetica", fontsize=9]
 
-    root_llm_wiki [label="LLM Wiki Bundle\nThe entry point — wires everything together\nv0.1.1\n0 tools · 0 agents\n~74 tok aggregate", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", penwidth=2]
+    root_llm_wiki [label="LLM Wiki Bundle\nThe entry point — wires everything together\nv0.2.0\n0 tools · 0 agents\n~74 tok aggregate", shape=box, fillcolor="#80cbc4", style="filled,rounded,bold", penwidth=2]
 
     subgraph cluster_behaviors {
         label="Behaviors — Workflow Instructions"
@@ -22,7 +22,7 @@ digraph llm_wiki {
         fillcolor="#f9f9f9"
         color="#999999"
 
-        beh_llm_wiki_behavior [label="Wiki Workflow Guide\nHow to ingest, lint, and publish content\n(llm-wiki-behavior)\n~121 tok", shape=box, fillcolor="#e0f2f1", style="filled,rounded"]
+        beh_llm_wiki_behavior [label="Install Anchor\nPins the repo so the modes hook can discover modes/\n(llm-wiki-behavior)\n~121 tok", shape=box, fillcolor="#e0f2f1", style="filled,rounded"]
     }
 
     subgraph cluster_agents {

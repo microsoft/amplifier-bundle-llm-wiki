@@ -3,9 +3,10 @@ bundle:
   version: 0.2.0
   description: Generic workflow modes for LLM-maintained wikis
 
-# Truly zero-cost: this behavior is the install anchor only.
-# Including it composes the parent bundle, which causes the
-# modes/ directory to be discovered by the modes hook.
+# Truly zero-cost: this behavior is an install anchor only.
+# Adding it pins the repo into the registry; the modes hook then
+# discovers modes/ by scanning the repo root. The behavior itself
+# carries no includes, no session config, and no context.
 # Wiki orientation (context/wiki-instructions.md) is contributed
 # by each wiki-* mode's contributes.context block — loaded only
 # while a wiki mode is active, never when the bundle is dormant.

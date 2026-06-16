@@ -63,11 +63,11 @@ Short version:
 
 ## Status
 
-`0.2.x` — five workflow modes (`wiki-init`, `wiki-ingest`, `wiki-lint`, `wiki-publish`, `wiki-query`) and one contributed agent (`wiki-policy-designer`). Refactored to the zero-cost-when-dormant pattern: bundle composition contributes zero tokens to the session context until a wiki mode is activated.
+Five workflow modes (`wiki-init`, `wiki-ingest`, `wiki-lint`, `wiki-publish`, `wiki-query`) and one contributed agent (`wiki-policy-designer`). Bundle composition follows the zero-cost-when-dormant pattern: it contributes zero tokens to the session context until a wiki mode is activated.
 
 ## Lineage
 
-- Andrej Karpathy, [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (April 2026) — the original pattern
+- Andrej Karpathy, [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (April 2026) — the original pattern, vendored verbatim as this bundle's guiding doc at [docs/llm-wiki-pattern.md](docs/llm-wiki-pattern.md)
 - [`amplifier-bundle-modes`](https://github.com/microsoft/amplifier-bundle-modes) — provides the mode mechanism this bundle ships modes for. See [§9.7 "Workflow Modes with Shared Orientation"](https://github.com/microsoft/amplifier-bundle-modes/blob/main/context/mode-schema-reference.md#97-workflow-modes-with-shared-orientation) — this bundle is documented there as the canonical reference implementation
 - Reference implementations studied: alirezarezvani/claude-skills, balukosuri/llm-wiki-karpathy, balukosuri/wiki-from-code, lucasastorian/llmwiki, xoai/sage-wiki, tobi/qmd, garrytan/gbrain, NousResearch/hermes-agent
 

@@ -25,6 +25,7 @@ mode:
   contributes:
     context:
       - "@llm-wiki:context/wiki-instructions.md"
+      - "@llm-wiki:docs/llm-wiki-pattern.md"
 ---
 
 # Wiki Lint Mode
@@ -52,9 +53,10 @@ Walk the wiki package directory. Check for:
 
 - **Orphans** — pages with zero inbound `[[wikilinks]]` or `sources[]` references
 - **Broken links** — wikilinks or paths pointing to non-existent pages
+- **Index drift** — pages on disk missing from `index.md`, or `index.md` entries pointing to pages that no longer exist
 - **Missing frontmatter** — pages lacking fields the project's schema requires
 - **Duplicate titles** — same `title:` on two pages
-- **Log gaps** — no log entry in the last 14 days (or whatever the project schema specifies)
+- **Log gaps** — no `log.md` entry in the last 14 days (or whatever the project schema specifies), or entries that don't match the `## [date] op | title` format
 
 ### Step 3 — Semantic checks
 
