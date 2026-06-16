@@ -2,6 +2,8 @@
 
 A wiki workflow mode is active. This orientation is mounted by every `wiki-*` mode (`contributes.context`) and unmounts when you exit. It describes the cross-mode shape of the bundle so you know what's adjacent to your current mode.
 
+**The foundational pattern doc (`docs/llm-wiki-pattern.md`) is also mounted in every wiki mode** — it describes the LLM Wiki pattern in the abstract and is the lens to read everything below through. It explains the *why*; this orientation and the project's `.wiki/context/schema.md` give the *how*. When the abstract pattern and a project's specifics seem to conflict, the project's schema wins.
+
 ## Available modes
 
 - `/wiki-init` — design and scaffold the project-specific policy (run this first when adopting the bundle)
@@ -62,6 +64,28 @@ When deciding where a file goes, ask: *who is the audience and how does the file
 - **Repo root** — humans read it; persists across sessions; either hand-edited or appended to over time (like an audit log).
 - **`<package-dir>/`** — the wiki's audience reads it; ships in the zip.
 - **`.wiki/`** — agents and scripts produce it; regenerated, ephemeral, or operationally-needed-but-not-shipped.
+
+## Index & log — the navigational backbone
+
+Two records keep the wiki navigable and auditable. They are the **default contract** every mode relies on. A project's `.wiki/context/schema.md` may override the paths or formats (e.g. a JSON manifest instead of a markdown index) — when it does, the modes follow the schema. Absent an override, these defaults hold:
+
+- **`<package-dir>/index.md`** — the catalog, and the entry point for every query. One line per page, grouped by entity type:
+  ```
+  ## People
+  - [[people/alice]] — VP Eng; owns the platform roadmap
+  ## Concepts
+  - [[concepts/retry-policy]] — exponential backoff; supersedes the old fixed-delay rule
+  ```
+  It ships with the wiki (it's navigation for the wiki's audience). `/wiki-ingest` updates it every cycle; `/wiki-query` reads it first.
+
+- **`log.md`** (repo root, not shipped) — an append-only timeline, one line per cycle, with a fixed prefix so it stays greppable (`grep "^## \[" log.md | tail`):
+  ```
+  ## [2026-06-16] ingest | Q2 planning call — touched 11 pages
+  ## [2026-06-16] lint | 0 contradictions, 2 orphans filed
+  ```
+  Every `/wiki-ingest` appends one entry; `/wiki-lint` reads it to judge cadence.
+
+These are load-bearing, not optional bookkeeping: index-first navigation is what makes query work without embedding-RAG at moderate scale, and the greppable log is what makes lint cadence and provenance checkable. Skipping them doesn't make the wiki simpler — it makes it unnavigable as it grows.
 
 ## First-time setup
 

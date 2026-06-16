@@ -26,6 +26,7 @@ mode:
   contributes:
     context:
       - "@llm-wiki:context/wiki-instructions.md"
+      - "@llm-wiki:docs/llm-wiki-pattern.md"
 ---
 
 # Wiki Ingest Mode
@@ -69,25 +70,24 @@ For each entity/concept/decision in the update plan:
 - If not: create the page following the project's template (per the schema).
 - Update cross-refs: `[[wikilinks]]`, `sources[]` arrays, or both — per the project's convention.
 
-Touch the index and any catalog files the schema names.
+Cross-link new pages from related pages so nothing lands orphaned. (The `index.md` catalog itself is updated in Step 4.)
 
-### Step 4 — Record what happened
+### Step 4 — Update the index and log
 
-The project decides *how* it tracks ingest activity (audit log, learnings file, both, neither). The bundle does not mandate a specific file or format. Read the project's `AGENTS.md` and `.wiki/context/schema.md` to see what the project has chosen.
+Two records are the navigable backbone of the wiki (see "Index & log — the navigational backbone" in the orientation for the exact formats). Update **both** every cycle:
 
-Typical patterns projects use:
+- **`<package-dir>/index.md`** — add or revise a catalog entry for every page you created or changed.
+- **`log.md`** (repo root) — append one entry: `## [YYYY-MM-DD] ingest | <source title>`, plus a one-line summary of what was touched.
 
-- **Audit log at the repo root** (often `log.md` or similar): one entry per cycle with what was touched. Persists across sessions.
-- **A learnings file at the repo root**: principles or skip rules that improve future classifications. Project-defined discipline.
-- **Transient review reports under `.wiki/`**: e.g. uncertain-classification reports for the maintainer to review. Regenerated each run.
+If the project's `.wiki/context/schema.md` overrides the index/log paths or formats, follow the schema; otherwise use the defaults above.
 
-**Placement principle** (load-bearing, from the bundle's three-zone convention):
+The project may *also* keep its own records — a learnings file, transient review reports, etc. Those are project policy, not required by the bundle. Placement, per the three-zone convention:
 
-- Persistent files the human reads → **repo root** (alongside `AGENTS.md`).
-- Transient artifacts your ingest produces (review reports, diagnostic dumps, anything the maintainer reviews then throws away) → **`.wiki/`**, never at the repo root, never inside `<package-dir>/`.
+- Persistent records the human reads (the log, a learnings file) → **repo root**, alongside `AGENTS.md`.
+- Transient artifacts your ingest produces (review reports, diagnostic dumps) → **`.wiki/`**, never the repo root, never inside `<package-dir>/`.
 - Content for the wiki audience → **`<package-dir>/`** (the shippable boundary).
 
-If the project hasn't yet decided how it tracks activity, do the minimum: write any low-confidence calls to a transient report under `.wiki/` (the project can rename or restructure later), and surface to the maintainer that the project may want to formalize an audit/learnings convention. **Do not** invent persistent files at the repo root without the project's policy directing you to.
+Write any low-confidence calls to a transient report under `.wiki/` for the maintainer to review. Beyond the index, the log, and the project's declared records, **do not** invent new persistent files without the project's policy directing you to.
 
 ### Step 5 — Verify (mandatory gate)
 

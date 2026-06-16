@@ -25,6 +25,7 @@ mode:
   contributes:
     context:
       - "@llm-wiki:context/wiki-instructions.md"
+      - "@llm-wiki:docs/llm-wiki-pattern.md"
 ---
 
 # Wiki Publish Mode

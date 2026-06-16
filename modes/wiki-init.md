@@ -24,6 +24,7 @@ mode:
   contributes:
     context:
       - "@llm-wiki:context/wiki-instructions.md"
+      - "@llm-wiki:docs/llm-wiki-pattern.md"
     agents:
       wiki-policy-designer:
         source: "@llm-wiki:agents/wiki-policy-designer"

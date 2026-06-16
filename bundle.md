@@ -1,7 +1,7 @@
 ---
 bundle:
   name: llm-wiki
-  version: 0.1.1
+  version: 0.2.0
   description: Generic workflow modes for LLM-maintained wikis — the Karpathy LLM Wiki pattern, applied
 
 includes:

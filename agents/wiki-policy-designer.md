@@ -53,7 +53,7 @@ When in doubt: read first, narrate intent, ask before destroying.
 | `cadence` | Optional | event-driven vs scheduled; defaults to event-driven |
 | `viewer` | Optional | static SPA, plain markdown browsing, none; defaults to none |
 | `project_root` | Required | Where to write the scaffold |
-| `package_name` | Required | Name of the wiki package (e.g., `team-pulse-package`, `wiki`, `kb`) |
+| `package_name` | Required | Name of the wiki package (e.g., `wiki`, `kb`, `docs`) |
 
 ### Your job
 
@@ -65,8 +65,10 @@ When in doubt: read first, narrate intent, ask before destroying.
      - `.gitignore` — patterns for `raw/**` (contents only), `.wiki/dist/`, plus any project-specific transient artifacts
      - `raw/.gitkeep` — immutable source inbox (folder committed, contents gitignored)
      - `.amplifier/settings.yaml` — **self-sufficient** Amplifier config (see template below)
+     - `log.md` — append-only ingest/lint timeline (header + format note, no synthetic entries)
    - **Wiki content** (at `<package-dir>/`, shippable boundary):
      - `<package-dir>/README.md` — team-facing orientation (the only README that ships in the zip)
+     - `<package-dir>/index.md` — the catalog / navigational backbone (seed empty-but-structured)
    - **Operational scaffolding** (at `.wiki/`, NOT in the zip):
      - `.wiki/context/schema.md` — machine-oriented schema reference for ingest agents
      - `.wiki/scripts/publish.sh` — the project's publish implementation (writes to `.wiki/dist/`)
@@ -140,11 +142,25 @@ Empty directory with note. The `raw/` directory is immutable source — LLM read
 
 ### `<package-dir>/index.md`
 
-Single file with a paragraph describing what the wiki contains. Example:
+The catalog — the navigational backbone (see the index/log contract in `context/wiki-instructions.md`). Seed it **empty-but-structured**: a short intro line plus one header per entity type the schema defines, with no entries yet. Do NOT pre-fill synthetic pages. Example:
 ```markdown
-# Team Pulse Package
+# Project Knowledge Base — Index
 
-This wiki maintains a cross-referenced index of team initiatives, research findings, customer feedback, and strategic decisions. Updated incrementally as new information arrives.
+Catalog of every page. One line per page, grouped by type. The LLM updates this on every ingest.
+
+## People
+## Concepts
+## Sources
+```
+
+### `log.md` (repo root)
+
+The append-only timeline. Seed it with a header and the format note, **no entries** (the wiki compounds from real cycles, not synthetic history):
+```markdown
+# Log
+
+Append-only. One line per cycle: `## [YYYY-MM-DD] <op> | <title>`.
+Greppable: `grep "^## \[" log.md | tail`.
 ```
 
 ### `.wiki/context/schema.md`
@@ -269,12 +285,14 @@ Root files (universal):
 - [ ] `.gitignore` created with `raw/**` (except .gitkeep) and `.wiki/dist/` (universal patterns)
 - [ ] `raw/.gitkeep` created
 - [ ] `.amplifier/settings.yaml` created with **self-sufficient** bundle config (`active` base + `llm-wiki` as app overlay — NOT `includes:`)
+- [ ] `log.md` created (header + format note, no synthetic entries)
 
 Project-specific root files (only if specified in the policy brief — e.g. audit log, ingest-policy doc):
 - [ ] Any persistent operating documents the brief calls out, seeded with structure (no fabricated content)
 
 Wiki content boundary:
 - [ ] `<package-dir>/README.md` created (team-facing orientation that ships in the zip)
+- [ ] `<package-dir>/index.md` created (empty-but-structured catalog)
 
 Operational scaffolding:
 - [ ] `.wiki/context/schema.md` created with full schema reference

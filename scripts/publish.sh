@@ -6,7 +6,7 @@
 # before the project's policy is finalized.
 #
 # Examples of what to put here:
-#   - zip team-pulse-package.zip team-pulse-package/
+#   - zip wiki.zip wiki/
 #   - rsync wiki/ user@host:/var/www/wiki/
 #   - git push to a publish remote
 #   - HTTP POST to a content API
